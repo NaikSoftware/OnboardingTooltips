@@ -2,4 +2,7 @@
     <string name="app_name">Sample</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="nav_1">Nav 1</string>
+    <string name="nav_2">Nav 2</string>
+    <string name="nav_3">Nav 3</string>
 </resources>

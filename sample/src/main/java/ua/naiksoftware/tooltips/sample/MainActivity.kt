@@ -1,11 +1,13 @@
 package ua.naiksoftware.tooltips.sample
 
+import android.graphics.Color
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.doOnPreDraw
 import ua.naiksoftware.tooltips.TooltipOverlayPopup
 import ua.naiksoftware.tooltips.TooltipOverlayParams
 import ua.naiksoftware.tooltips.TooltipView
@@ -30,8 +32,14 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        fab.post {
-            TooltipOverlayPopup(this).show(TooltipOverlayParams(), TooltipView(this), fab)
+        fab.doOnPreDraw {
+            TooltipOverlayPopup(this).show(
+                TooltipOverlayParams()
+                    .withOverlayColor(Color.BLUE)
+                    .withBottomBarrier(findViewById(R.id.bottom_nav))
+                    .withTopBarrier(tabs),
+                TooltipView(this), fab, this
+            )
         }
     }
 }

@@ -13,6 +13,9 @@ class TooltipOverlayParams() {
 
     var dismissOnTouchTooltip = true
     var dismissOnTouchOutside = true
+    var dismissOnTouchOverlay = true
+    var dismissOnTouchAnchor = true
+    var anchorClickable = true
 
     lateinit var tooltipView: View
     lateinit var anchorView: View
@@ -43,12 +46,27 @@ class TooltipOverlayParams() {
     }
 
     fun setDismissOnTouchTooltip(value: Boolean) : TooltipOverlayParams {
-        this.dismissOnTouchTooltip = dismissOnTouchTooltip
+        this.dismissOnTouchTooltip = value
         return this
     }
 
     fun setDismissOnTouchOutside(value: Boolean) : TooltipOverlayParams {
-        this.dismissOnTouchOutside = dismissOnTouchOutside
+        this.dismissOnTouchOutside = value
+        return this
+    }
+
+    fun setDismissOnTouchOverlay(value: Boolean) : TooltipOverlayParams {
+        this.dismissOnTouchOverlay = value
+        return this
+    }
+
+    fun setDismissOnTouchAnchor(value: Boolean) : TooltipOverlayParams {
+        this.dismissOnTouchAnchor = value
+        return this
+    }
+
+    fun setAnchorClickable(value: Boolean) : TooltipOverlayParams {
+        this.anchorClickable = value
         return this
     }
 }
