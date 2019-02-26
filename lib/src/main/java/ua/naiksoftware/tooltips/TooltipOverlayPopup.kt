@@ -34,7 +34,7 @@ class TooltipOverlayPopup(val context: Context) {
     private lateinit var overlayView: TooltipOverlayLayout
     private lateinit var popupWindow: PopupWindow
 
-    fun show(params: TooltipOverlayParams, tooltip: View, anchor: View, activity: Activity) {
+    fun show(params: TooltipOverlayParams, tooltip: View, anchor: View, activity: Activity, onDismissListener: (() -> Unit)? = null) {
         tooltipView = tooltip
         anchorView = anchor
         leftBarrier = params.leftBarrier
@@ -51,6 +51,7 @@ class TooltipOverlayPopup(val context: Context) {
         val popupRootView = FrameLayout(context)
         overlayView = TooltipOverlayLayout(context)
         overlayView.setBackgroundColor(overlayColor)
+        overlayView.setAnchorView(anchorView)
 
         val screenRect = Rect()
         val window = activity.window.decorView.getWindowVisibleDisplayFrame(screenRect)
@@ -95,6 +96,8 @@ class TooltipOverlayPopup(val context: Context) {
                 return@setTouchInterceptor false
             }
         }
+
+        popupWindow.setOnDismissListener(onDismissListener)
     }
 
     private fun clickedOnAnchor(screenRect: Rect, x: Float, y: Float): Boolean {

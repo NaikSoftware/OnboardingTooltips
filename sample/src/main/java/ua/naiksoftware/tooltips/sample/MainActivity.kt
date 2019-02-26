@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         fab.doOnPreDraw {
             TooltipOverlayPopup(this).show(
                 TooltipOverlayParams()
-                    .withOverlayColor(Color.BLUE)
                     .withBottomBarrier(findViewById(R.id.bottom_nav))
                     .withTopBarrier(tabs),
                 TooltipView(this), fab, this
