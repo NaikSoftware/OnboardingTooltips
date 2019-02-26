@@ -30,5 +30,5 @@ abstract class BaseTooltipView : View {
     ) {}
 
 
-    abstract fun setTooltipAnchorPoint(x: Int, y: Int)
+    abstract fun setTooltipAnchorPoint(x: Float, y: Float)
 }
