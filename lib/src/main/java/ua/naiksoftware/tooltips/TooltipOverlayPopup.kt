@@ -32,6 +32,16 @@ class TooltipOverlayPopup() {
         overlayLayoutParams.rightMargin = screenRect.width() - overlayRect.right
         overlayLayoutParams.bottomMargin = screenRect.height() - overlayRect.bottom
 
+        val anchorLocation = IntArray(2)
+        params.anchorView.getLocationOnScreen(anchorLocation)
+        val anchorViewX = anchorLocation[0] - overlayLayoutParams.leftMargin
+        val anchorViewY = anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top
+        val anchorRect = Rect(
+            anchorLocation[0],
+            anchorLocation[1] - screenRect.top,
+            anchorLocation[0] + params.anchorView.width,
+            anchorLocation[1] + params.anchorView.height - screenRect.top)
+
         popupRootView.addView(overlayView, overlayLayoutParams)
 
         popupWindow =
@@ -44,10 +54,9 @@ class TooltipOverlayPopup() {
         var startClickPosX = 0F
         var startClickPosY = 0F
         popupWindow.setTouchInterceptor { _, event ->
-            val clickedOnOverlay = clickedOnOverlay(screenRect, overlayRect, event.x, event.y)
-            val clickedOnAnchor = clickedOnAnchor(screenRect, event.x, event.y)
+            val clickedOnOverlay = clickedOnRect(overlayRect, event.x, event.y)
+            val clickedOnAnchor = clickedOnRect(anchorRect, event.x, event.y)
             if (event.action == MotionEvent.ACTION_UP && Math.abs(event.x - startClickPosX) < 30 && Math.abs(event.y - startClickPosY) < 30) {
-                Log.d(TAG, "clickedOnOverlay = $clickedOnOverlay clickedOnAnchor = $clickedOnAnchor")
 
                 return@setTouchInterceptor when {
                     clickedOnAnchor -> {
@@ -79,11 +88,7 @@ class TooltipOverlayPopup() {
 
         popupWindow.setOnDismissListener(onDismissListener)
 
-        val anchorLocation = IntArray(2)
-        params.anchorView.getLocationOnScreen(anchorLocation)
-        val anchorViewX = (anchorLocation[0] - overlayLayoutParams.leftMargin).toFloat()
-        val anchorViewY = (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat()
-        overlayView.setAnchorView(params.anchorView, anchorViewX, anchorViewY)
+        overlayView.setAnchorView(params.anchorView, anchorViewX.toFloat(), anchorViewY.toFloat())
 
         val tooltipView = params.tooltipView
 
@@ -120,11 +125,7 @@ class TooltipOverlayPopup() {
         }
     }
 
-    private fun clickedOnAnchor(screenRect: Rect, x: Float, y: Float): Boolean {
-        return false
-    }
-
-    private fun clickedOnOverlay(screenRect: Rect, overlayRect: Rect, x: Float, y: Float): Boolean {
+    private fun clickedOnRect(overlayRect: Rect, x: Float, y: Float): Boolean {
         return x > overlayRect.left && x < overlayRect.right
                 && y > overlayRect.top && y < overlayRect.bottom
     }
