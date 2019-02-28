@@ -53,8 +53,8 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         init(context, null, 0, 0, text)
     }
 
-    constructor(context: Context, spannedString: SpannedString) : super(context) {
-        init(context, null, 0, 0, null, spannedString)
+    constructor(context: Context, contentView: View) : super(context) {
+        init(context, null, 0, 0, null, contentView)
     }
 
     private fun init(
@@ -63,23 +63,27 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         defStyleAttr: Int,
         defStyleRes: Int,
         text: String?,
-        spannedString: SpannedString? = null
+        contentView: View? = null
     ) {
         setWillNotDraw(false)
         val density = context.resources.displayMetrics.density
-        arrowWidth = (density * 32).toInt()
-        arrowHeight = (density * 16).toInt()
-        arrowRadius = arrowHeight / 4f
+        arrowWidth = (density * 42).toInt()
+        arrowHeight = (density * 24).toInt()
+        arrowRadius = density * 8
         bubbleRadius = density * 4
         bubblePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         bubblePaint.color = Color.WHITE
         bubblePaint.style = Paint.Style.FILL
-        val textView = TextView(context)
-        textView.text = text ?: spannedString
-        textView.textSize = 18f
-        textView.setTextColor(0xde000000.toInt())
-        textView.setPadding((density * 16).toInt())
-        contentView = textView
+        if (contentView == null) {
+            val textView = TextView(context)
+            textView.text = text
+            textView.textSize = 18f
+            textView.setTextColor(0xde000000.toInt())
+            textView.setPadding((density * 16).toInt())
+            this.contentView = textView
+        } else {
+            this.contentView = contentView
+        }
         addView(contentView)
     }
 
@@ -95,7 +99,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
 
     private fun getBubblePath(): Path {
         val path = Path()
-        when(position) {
+        when (position) {
 
 
             TooltipPosition.CENTER -> {
@@ -123,62 +127,22 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                     bubbleRadius, bubbleRadius, Path.Direction.CW
                 )
                 if (arrowTargetX < 0) arrowTargetX = width / 2f
-                path.moveTo(arrowTargetX - arrowWidth / 2, bubbleBottom)
-                path.lineTo(arrowTargetX, height - paddingBottom.toFloat())
-                path.lineTo(arrowTargetX + arrowWidth / 2, bubbleBottom)
+
+                val k = arrowWidth / arrowRadius
+                val h = arrowHeight / k
+
+                path.moveTo(arrowTargetX - arrowWidth / 2f, bubbleBottom)
+                path.lineTo(arrowTargetX - arrowRadius / 2f, height - h - paddingBottom)
+                path.quadTo(
+                    arrowTargetX,
+                    height - paddingBottom.toFloat(),
+                    arrowTargetX + arrowRadius / 2f,
+                    height - h - paddingBottom
+                )
+                path.lineTo(arrowTargetX + arrowWidth / 2f, bubbleBottom)
                 path.close()
             }
         }
-
-//        val spacingTop = (if (this.position === TooltipPosition.BOTTOM) arrowHeight else 0f)
-//        val spacingBottom = (if (this.position === TooltipPosition.TOP) arrowHeight else 0f)
-//
-//        val left = spacingLeft + myRect.left
-//        val top = spacingTop + myRect.top
-//        val right = myRect.right - spacingRight
-//        val bottom = myRect.bottom - spacingBottom
-//        val centerX = viewRect.centerX() - x
-//
-//        val arrowSourceX = if (Arrays.asList(TooltipPosition.TOP, TooltipPosition.BOTTOM).contains(this.position))
-//            centerX + arrowSourceMargin
-//        else
-//            centerX
-//        val arrowTargetX = if (Arrays.asList(TooltipPosition.TOP, TooltipPosition.BOTTOM).contains(this.position)) centerX + arrowTargetMargin
-//        else val arrowSourceY = bottom / 2f - arrowSourceMargin
-//        else val arrowTargetY = bottom / 2f - arrowTargetMargin
-//        else bottom / 2f
-//
-//        path.moveTo(left + topLeftDiameter / 2f, top)
-//        //LEFT, TOP
-//
-//        if (position === TooltipPosition.BOTTOM) {
-//            path.lineTo(arrowSourceX - arrowWidth, top)
-//            path.lineTo(arrowTargetX, myRect.top)
-//            path.lineTo(arrowSourceX + arrowWidth, top)
-//        }
-//        path.lineTo(right - topRightDiameter / 2f, top)
-//
-//        path.quadTo(right, top, right, top + topRightDiameter / 2)
-//        //RIGHT, TOP
-//
-//        path.lineTo(right, bottom - bottomRightDiameter / 2)
-//
-//        path.quadTo(right, bottom, right - bottomRightDiameter / 2, bottom)
-//        //RIGHT, BOTTOM
-//
-//        if (position === TooltipPosition.TOP) {
-//            path.lineTo(arrowSourceX + arrowWidth, bottom)
-//            path.lineTo(arrowTargetX, myRect.bottom)
-//            path.lineTo(arrowSourceX - arrowWidth, bottom)
-//        }
-//        path.lineTo(left + bottomLeftDiameter / 2, bottom)
-//
-//        path.quadTo(left, bottom, left, bottom - bottomLeftDiameter / 2)
-//        //LEFT, BOTTOM
-//
-//        path.lineTo(left, top + topLeftDiameter / 2)
-//
-//        path.quadTo(left, top, left + topLeftDiameter / 2, top)
 
         return path
     }

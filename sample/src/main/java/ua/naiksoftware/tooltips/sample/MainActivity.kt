@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         val tooltipView = TooltipView(this, "Test tooltip")
         val density = resources.displayMetrics.density
-        tooltipView.setPadding((density * 16).toInt(), (density * 4).toInt(), (density * 16).toInt(), (density * 4).toInt())
+        tooltipView.setPadding((density * 16).toInt(), 0, (density * 16).toInt(), 0)
 
         fab.doOnPreDraw {
             TooltipOverlayPopup().show(
