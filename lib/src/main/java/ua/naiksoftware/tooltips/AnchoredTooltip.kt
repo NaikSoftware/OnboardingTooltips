@@ -2,5 +2,5 @@ package ua.naiksoftware.tooltips
 
 interface AnchoredTooltip {
 
-    fun setTooltipAnchorPoint(x: Float)
+    fun setTooltipAnchor(x: Float, tooltipPosition: TooltipPosition)
 }

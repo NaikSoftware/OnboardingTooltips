@@ -87,19 +87,19 @@ class TooltipOverlayPopup() {
 
         val tooltipView = params.tooltipView
 
-        if (tooltipView is AnchoredTooltip && params.tooltipPosition != TooltipPosition.CENTER) {
+        if (tooltipView is AnchoredTooltip && params.tooltipPosition != TooltipPosition.CENTER && params.tooltipPosition != null) {
             val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             lp.leftMargin = overlayLayoutParams.leftMargin
             lp.rightMargin = overlayLayoutParams.rightMargin
             val anchorX: Float
             when (params.tooltipPosition) {
                 TooltipPosition.TOP -> {
-                    anchorX = anchorViewX - params.anchorView.width / 2f
-                    lp.bottomMargin = screenRect.height() - anchorLocation[1]  + screenRect.top
+                    anchorX = anchorViewX + params.anchorView.width / 2f
+                    lp.bottomMargin = screenRect.height() - anchorLocation[1] + screenRect.top
                     lp.gravity = Gravity.BOTTOM
                 }
                 TooltipPosition.BOTTOM -> {
-                    anchorX = anchorViewX - params.anchorView.width / 2f
+                    anchorX = anchorViewX + params.anchorView.width / 2f
                     lp.topMargin = anchorLocation[1] - screenRect.top + params.anchorView.height
                     lp.gravity = Gravity.TOP
                 }
@@ -107,8 +107,8 @@ class TooltipOverlayPopup() {
                     anchorX = 0f
                 }
             }
+            tooltipView.setTooltipAnchor(anchorX, params.tooltipPosition!!)
             popupRootView.addView(tooltipView, lp)
-            tooltipView.setTooltipAnchorPoint(anchorX)
         } else {
             val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             lp.topMargin = overlayLayoutParams.topMargin

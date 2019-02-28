@@ -20,7 +20,6 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     private var arrowRadius = 0f
     private var bubbleRadius = 0f
     private var arrowTargetX = -1f
-    private var arrowTargetY = -1f
     private lateinit var contentView: View
     private lateinit var bubblePaint: Paint
 
@@ -58,13 +57,20 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         init(context, null, 0, 0, null, spannedString)
     }
 
-    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, text: String?, spannedString: SpannedString? = null) {
+    private fun init(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int,
+        text: String?,
+        spannedString: SpannedString? = null
+    ) {
         setWillNotDraw(false)
         val density = context.resources.displayMetrics.density
         arrowWidth = (density * 32).toInt()
         arrowHeight = (density * 16).toInt()
         arrowRadius = arrowHeight / 4f
-        bubbleRadius = density * 2
+        bubbleRadius = density * 4
         bubblePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         bubblePaint.color = Color.WHITE
         bubblePaint.style = Paint.Style.FILL
@@ -89,15 +95,40 @@ class TooltipView : ViewGroup, AnchoredTooltip {
 
     private fun getBubblePath(): Path {
         val path = Path()
-        path.addRoundRect(
-            RectF(
-                paddingLeft.toFloat(),
-                paddingTop.toFloat(),
-                width - paddingRight.toFloat(),
-                height - paddingBottom.toFloat()
-            ),
-            bubbleRadius, bubbleRadius, Path.Direction.CW
-        )
+        when(position) {
+
+
+            TooltipPosition.CENTER -> {
+                path.addRoundRect(
+                    RectF(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        width - paddingRight.toFloat(),
+                        height - paddingBottom.toFloat()
+                    ),
+                    bubbleRadius, bubbleRadius, Path.Direction.CW
+                )
+                path.close()
+            }
+
+            TooltipPosition.TOP -> {
+                val bubbleBottom = height - paddingBottom.toFloat() - arrowHeight
+                path.addRoundRect(
+                    RectF(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        width - paddingRight.toFloat(),
+                        bubbleBottom
+                    ),
+                    bubbleRadius, bubbleRadius, Path.Direction.CW
+                )
+                if (arrowTargetX < 0) arrowTargetX = width / 2f
+                path.moveTo(arrowTargetX - arrowWidth / 2, bubbleBottom)
+                path.lineTo(arrowTargetX, height - paddingBottom.toFloat())
+                path.lineTo(arrowTargetX + arrowWidth / 2, bubbleBottom)
+                path.close()
+            }
+        }
 
 //        val spacingTop = (if (this.position === TooltipPosition.BOTTOM) arrowHeight else 0f)
 //        val spacingBottom = (if (this.position === TooltipPosition.TOP) arrowHeight else 0f)
@@ -149,18 +180,11 @@ class TooltipView : ViewGroup, AnchoredTooltip {
 //
 //        path.quadTo(left, top, left + topLeftDiameter / 2, top)
 
-        path.close()
-
         return path
     }
 
     fun setBubbleColor(color: Int) {
         bubblePaint.color = color
-        invalidate()
-    }
-
-    fun setPosition(position: TooltipPosition) {
-        this.position = position
         invalidate()
     }
 
@@ -180,8 +204,9 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         invalidate()
     }
 
-    override fun setTooltipAnchorPoint(x: Float) {
+    override fun setTooltipAnchor(x: Float, tooltipPosition: TooltipPosition) {
         this.arrowTargetX = x
+        this.position = tooltipPosition
         invalidate()
     }
 
@@ -213,7 +238,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         when (position) {
-            TooltipPosition.TOP -> contentView.layout(l, t, r, b - arrowHeight)
+            TooltipPosition.TOP -> contentView.layout(
+                paddingLeft,
+                paddingTop,
+                contentView.measuredWidth + paddingLeft,
+                contentView.measuredHeight + paddingTop
+            )
             TooltipPosition.BOTTOM -> contentView.layout(l, t + arrowHeight, r, b)
             else -> contentView.layout(
                 paddingLeft,
