@@ -3,7 +3,6 @@ package ua.naiksoftware.tooltips
 import android.content.Context
 import android.graphics.*
 import android.os.Build
-import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +83,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         } else {
             this.contentView = contentView
         }
-        addView(contentView)
+        addView(this.contentView)
     }
 
     fun setContentView(contentView: View) {
@@ -140,6 +139,34 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                     height - h - paddingBottom
                 )
                 path.lineTo(arrowTargetX + arrowWidth / 2f, bubbleBottom)
+                path.close()
+            }
+
+            TooltipPosition.BOTTOM -> {
+                val bubbleTop = paddingTop.toFloat() + arrowHeight
+                path.addRoundRect(
+                    RectF(
+                        paddingLeft.toFloat(),
+                        bubbleTop,
+                        width - paddingRight.toFloat(),
+                        height - paddingBottom.toFloat()
+                    ),
+                    bubbleRadius, bubbleRadius, Path.Direction.CW
+                )
+                if (arrowTargetX < 0) arrowTargetX = width / 2f
+
+                val k = arrowWidth / arrowRadius
+                val h = arrowHeight / k
+
+                path.moveTo(arrowTargetX - arrowWidth / 2f, bubbleTop)
+                path.lineTo(arrowTargetX - arrowRadius / 2f, paddingTop + h)
+                path.quadTo(
+                    arrowTargetX,
+                    paddingTop.toFloat(),
+                    arrowTargetX + arrowRadius / 2f,
+                    paddingTop + h
+                )
+                path.lineTo(arrowTargetX + arrowWidth / 2f, bubbleTop)
                 path.close()
             }
         }
@@ -208,7 +235,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                 contentView.measuredWidth + paddingLeft,
                 contentView.measuredHeight + paddingTop
             )
-            TooltipPosition.BOTTOM -> contentView.layout(l, t + arrowHeight, r, b)
+            TooltipPosition.BOTTOM -> contentView.layout(
+                paddingLeft,
+                paddingTop + arrowHeight,
+                contentView.measuredWidth + paddingLeft,
+                paddingTop + contentView.measuredHeight + arrowHeight
+            )
             else -> contentView.layout(
                 paddingLeft,
                 paddingTop,
