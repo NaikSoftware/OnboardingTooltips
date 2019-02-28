@@ -7,9 +7,8 @@ import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 
 
@@ -181,17 +180,14 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         invalidate()
     }
 
-    override fun setTooltipAnchorPoint(x: Float, y: Float) {
+    override fun setTooltipAnchorPoint(x: Float) {
         this.arrowTargetX = x
-        this.arrowTargetY = y
         invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthUsed = paddingLeft + paddingRight
         var heightUsed = paddingTop + paddingBottom
-        val h = MeasureSpec.getSize(heightMeasureSpec)
-        val hMode = MeasureSpec.getMode(heightMeasureSpec)
         if (position != TooltipPosition.CENTER) {
             heightUsed += arrowHeight
         }

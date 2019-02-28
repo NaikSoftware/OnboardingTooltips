@@ -1,14 +1,11 @@
 package ua.naiksoftware.tooltips
 
 import android.app.Activity
-import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.PopupWindow
-import androidx.core.content.ContextCompat
 
 class TooltipOverlayPopup() {
 
@@ -84,24 +81,34 @@ class TooltipOverlayPopup() {
 
         val anchorLocation = IntArray(2)
         params.anchorView.getLocationOnScreen(anchorLocation)
-        overlayView.setAnchorView(
-            params.anchorView,
-            (anchorLocation[0] - overlayLayoutParams.leftMargin).toFloat(),
-            (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat()
-        )
+        val anchorViewX = (anchorLocation[0] - overlayLayoutParams.leftMargin).toFloat()
+        val anchorViewY = (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat()
+        overlayView.setAnchorView(params.anchorView, anchorViewX, anchorViewY)
 
         val tooltipView = params.tooltipView
 
         if (tooltipView is AnchoredTooltip && params.tooltipPosition != TooltipPosition.CENTER) {
-            var anchorX: Float
-            var anchorY: Float
+            val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            lp.leftMargin = overlayLayoutParams.leftMargin
+            lp.rightMargin = overlayLayoutParams.rightMargin
+            val anchorX: Float
             when (params.tooltipPosition) {
+                TooltipPosition.TOP -> {
+                    anchorX = anchorViewX - params.anchorView.width / 2f
+                    lp.bottomMargin = screenRect.height() - anchorLocation[1]  + screenRect.top
+                    lp.gravity = Gravity.BOTTOM
+                }
+                TooltipPosition.BOTTOM -> {
+                    anchorX = anchorViewX - params.anchorView.width / 2f
+                    lp.topMargin = anchorLocation[1] - screenRect.top + params.anchorView.height
+                    lp.gravity = Gravity.TOP
+                }
                 else -> {
                     anchorX = 0f
-                    anchorY = 0f
                 }
             }
-            tooltipView.setTooltipAnchorPoint(anchorX, anchorY)
+            popupRootView.addView(tooltipView, lp)
+            tooltipView.setTooltipAnchorPoint(anchorX)
         } else {
             val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             lp.topMargin = overlayLayoutParams.topMargin

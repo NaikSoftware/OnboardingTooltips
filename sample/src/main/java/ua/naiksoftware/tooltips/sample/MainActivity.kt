@@ -11,6 +11,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.setPadding
 import ua.naiksoftware.tooltips.TooltipOverlayPopup
 import ua.naiksoftware.tooltips.TooltipOverlayParams
+import ua.naiksoftware.tooltips.TooltipPosition
 import ua.naiksoftware.tooltips.TooltipView
 import ua.naiksoftware.tooltips.sample.ui.main.SectionsPagerAdapter
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         fab.doOnPreDraw {
             TooltipOverlayPopup().show(
                 TooltipOverlayParams(tooltipView, fab)
+                    .withTooltipPosition(TooltipPosition.TOP)
                     .withBottomBarrier(findViewById(R.id.bottom_nav))
                     .withTopBarrier(tabs),
                 this
