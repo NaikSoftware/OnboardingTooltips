@@ -1,69 +1,39 @@
 package ua.naiksoftware.tooltips
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.PopupWindow
+import androidx.core.content.ContextCompat
 
-class TooltipOverlayPopup(val context: Context) {
+class TooltipOverlayPopup() {
 
     companion object {
-        val TAG = TooltipOverlayPopup::class.java.simpleName!!
+        val TAG = TooltipOverlayPopup::class.java.simpleName
     }
 
-    private lateinit var anchorView: View
-    private lateinit var tooltipView: View
-
-    private var leftBarrier: View? = null
-    private var rightBarrier: View? = null
-    private var topBarrier: View? = null
-
-    private var bottomBarrier: View? = null
-
-    private var overlayColor = 0
-
-    private var dismissOnTouchTooltip: Boolean = true
-    private var dismissOnTouchOutside: Boolean = true
-    private var dismissOnTouchOverlay: Boolean = true
-    private var dismissOnTouchAnchor: Boolean = true
-    private var anchorClickable: Boolean = true
-
-    private lateinit var overlayView: TooltipOverlayLayout
     private lateinit var popupWindow: PopupWindow
 
-    fun show(params: TooltipOverlayParams, tooltip: View, anchor: View, activity: Activity, onDismissListener: (() -> Unit)? = null) {
-        tooltipView = tooltip
-        anchorView = anchor
-        leftBarrier = params.leftBarrier
-        rightBarrier = params.rightBarrier
-        topBarrier = params.topBarrier
-        bottomBarrier = params.bottomBarrier
-        overlayColor = params.overlayColor
-        dismissOnTouchTooltip = params.dismissOnTouchTooltip
-        dismissOnTouchOutside = params.dismissOnTouchOutside
-        dismissOnTouchOverlay = params.dismissOnTouchOverlay
-        dismissOnTouchAnchor = params.dismissOnTouchAnchor
-        anchorClickable = params.anchorClickable
+    fun show(params: TooltipOverlayParams, activity: Activity, onDismissListener: (() -> Unit)? = null) {
 
-        val popupRootView = FrameLayout(context)
-        overlayView = TooltipOverlayLayout(context)
-        overlayView.setBackgroundColor(overlayColor)
-        overlayView.setAnchorView(anchorView)
+        val popupRootView = FrameLayout(activity)
+        val overlayView = TooltipOverlayView(activity)
+        overlayView.setBackgroundColor(params.overlayColor)
 
         val screenRect = Rect()
         val window = activity.window.decorView.getWindowVisibleDisplayFrame(screenRect)
-        val overlayRect = getOverlayRect(screenRect)
+        val overlayRect = getOverlayRect(params, screenRect)
 
-        val layoutParams = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        layoutParams.leftMargin = overlayRect.left
-        layoutParams.topMargin = overlayRect.top
-        layoutParams.rightMargin = screenRect.width() - overlayRect.right
-        layoutParams.bottomMargin = screenRect.height() - overlayRect.bottom
+        val overlayLayoutParams = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        overlayLayoutParams.leftMargin = overlayRect.left
+        overlayLayoutParams.topMargin = overlayRect.top
+        overlayLayoutParams.rightMargin = screenRect.width() - overlayRect.right
+        overlayLayoutParams.bottomMargin = screenRect.height() - overlayRect.bottom
 
-        popupRootView.addView(overlayView, layoutParams)
+        popupRootView.addView(overlayView, overlayLayoutParams)
 
         popupWindow = PopupWindow(popupRootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         popupWindow.showAtLocation(activity.window.decorView.rootView, Gravity.NO_GRAVITY, 0, 0)
@@ -71,33 +41,66 @@ class TooltipOverlayPopup(val context: Context) {
         popupWindow.isFocusable = true
         popupWindow.contentView.isFocusableInTouchMode = true;
 
+        // TODO: Ignore swipes (check coordinates diff)
         popupWindow.setTouchInterceptor { _, event ->
+            val clickedOnOverlay = clickedOnOverlay(screenRect, overlayRect, event.x, event.y)
+            val clickedOnAnchor = clickedOnAnchor(screenRect, event.x, event.y)
             if (event.action == MotionEvent.ACTION_UP) {
-                val clickedOnOverlay = clickedOnOverlay(screenRect, overlayRect, event.x, event.y)
-                val clickedOnAnchor = clickedOnAnchor(screenRect, event.x, event.y)
                 Log.d(TAG, "clickedOnOverlay = $clickedOnOverlay clickedOnAnchor = $clickedOnAnchor")
 
                 return@setTouchInterceptor when {
                     clickedOnAnchor -> {
-                        if (dismissOnTouchAnchor) dismiss()
-                        !anchorClickable
+                        if (params.dismissOnTouchAnchor) dismiss()
+                        if (params.anchorClickable) activity.dispatchTouchEvent(event)
+                        !params.anchorClickable
                     }
                     clickedOnOverlay -> {
-                        if (dismissOnTouchOverlay) dismiss()
+                        if (params.dismissOnTouchOverlay) dismiss()
                         true
                     }
                     else -> {
-                        if (dismissOnTouchOutside) dismiss()
+                        if (params.dismissOnTouchOutside) dismiss()
                         activity.dispatchTouchEvent(event)
                         false
                     }
                 }
             } else {
+                if (!clickedOnOverlay || clickedOnAnchor && params.anchorClickable) {
+                    activity.dispatchTouchEvent(event)
+                }
                 return@setTouchInterceptor false
             }
         }
 
         popupWindow.setOnDismissListener(onDismissListener)
+
+        val anchorLocation = IntArray(2)
+        params.anchorView.getLocationOnScreen(anchorLocation)
+        overlayView.setAnchorView(params.anchorView,
+            (anchorLocation[0] - overlayLayoutParams.leftMargin).toFloat(),
+            (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat())
+
+        val tooltipView = params.tooltipView
+
+        if (tooltipView is AnchoredTooltip && params.tooltipPosition != TooltipPosition.CENTER) {
+            var anchorX: Float
+            var anchorY: Float
+            when(params.tooltipPosition) {
+                else -> {
+                    anchorX = 0f
+                    anchorY = 0f
+                }
+            }
+            tooltipView.setTooltipAnchorPoint(anchorX, anchorY)
+        } else {
+            val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            lp.topMargin = overlayLayoutParams.topMargin
+            lp.bottomMargin = overlayLayoutParams.bottomMargin
+            lp.leftMargin = overlayLayoutParams.leftMargin
+            lp.rightMargin = overlayLayoutParams.rightMargin
+            lp.gravity = Gravity.CENTER_VERTICAL
+            popupRootView.addView(tooltipView, lp)
+        }
     }
 
     private fun clickedOnAnchor(screenRect: Rect, x: Float, y: Float): Boolean {
@@ -109,34 +112,34 @@ class TooltipOverlayPopup(val context: Context) {
                 && y > overlayRect.top && y < overlayRect.bottom
     }
 
-    private fun getOverlayRect(screenRect: Rect): Rect {
+    private fun getOverlayRect(params: TooltipOverlayParams, screenRect: Rect): Rect {
         val rect = Rect()
         val location = IntArray(2)
 
-        leftBarrier?.let {
+        params.leftBarrier?.let {
             it.getLocationOnScreen(location)
             rect.left = location[0] + it.width
         }
 
-        when (rightBarrier) {
+        when (params.rightBarrier) {
             null -> rect.right = screenRect.width()
-            else -> rightBarrier?.let {
+            else -> params.rightBarrier?.let {
                 it.getLocationOnScreen(location)
                 rect.right = location[0]
             }
         }
 
-        topBarrier?.let {
+        params.topBarrier?.let {
             it.getLocationOnScreen(location)
             rect.top = location[1] + it.height - screenRect.top
         }
-        bottomBarrier?.let {
+        params.bottomBarrier?.let {
             it.getLocationOnScreen(location)
             rect.bottom = location[1]
         }
-        when (bottomBarrier) {
+        when (params.bottomBarrier) {
             null -> rect.bottom = screenRect.height()
-            else -> bottomBarrier?.let {
+            else -> params.bottomBarrier?.let {
                 it.getLocationOnScreen(location)
                 rect.bottom = location[1] - screenRect.top
             }

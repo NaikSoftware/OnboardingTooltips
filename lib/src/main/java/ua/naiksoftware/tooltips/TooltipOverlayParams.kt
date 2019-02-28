@@ -2,7 +2,7 @@ package ua.naiksoftware.tooltips
 
 import android.view.View
 
-class TooltipOverlayParams() {
+class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
 
     var leftBarrier: View? = null
     var rightBarrier: View? = null
@@ -17,8 +17,7 @@ class TooltipOverlayParams() {
     var dismissOnTouchAnchor = true
     var anchorClickable = true
 
-    lateinit var tooltipView: View
-    lateinit var anchorView: View
+    var tooltipPosition: TooltipPosition? = TooltipPosition.CENTER
 
     fun withLeftBarrier(leftBarrier: View): TooltipOverlayParams {
         this.leftBarrier = leftBarrier
@@ -37,6 +36,11 @@ class TooltipOverlayParams() {
 
     fun withBottomBarrier(bottomBarrier: View): TooltipOverlayParams {
         this.bottomBarrier = bottomBarrier
+        return this
+    }
+
+    fun withTooltipPosition(tooltipPosition: TooltipPosition) : TooltipOverlayParams {
+        this.tooltipPosition = tooltipPosition
         return this
     }
 

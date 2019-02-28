@@ -1,15 +1,13 @@
 package ua.naiksoftware.tooltips
 
 import android.content.Context
-
-import android.content.res.TypedArray
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
-class TooltipOverlayLayout : FrameLayout {
+
+class TooltipOverlayView : View {
 
     private var anchorViewBitmap: Bitmap? = null
     private var backgroundColor: Int = 0
@@ -50,19 +48,14 @@ class TooltipOverlayLayout : FrameLayout {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
-    fun setAnchorView(anchorView: View) {
-        post {
-            anchorViewBitmap = Bitmap.createBitmap(anchorView.width, anchorView.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(anchorViewBitmap!!)
-            anchorView.draw(canvas)
-            val location = IntArray(2)
-            val overlayLocation = IntArray(2)
-            anchorView.getLocationOnScreen(location)
-            this.getLocationOnScreen(overlayLocation)
-            anchorX = location[0].toFloat() - overlayLocation[0]
-            anchorY = location[1].toFloat() - overlayLocation[1]
-            invalidate()
-        }}
+    fun setAnchorView(anchorView: View, anchorX: Float, anchorY: Float) {
+        this.anchorX = anchorX
+        this.anchorY = anchorY
+        anchorViewBitmap = Bitmap.createBitmap(anchorView.width, anchorView.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(anchorViewBitmap!!)
+        anchorView.draw(canvas)
+        invalidate()
+    }
 
     override fun setBackgroundColor(color: Int) {
         this.backgroundColor = color

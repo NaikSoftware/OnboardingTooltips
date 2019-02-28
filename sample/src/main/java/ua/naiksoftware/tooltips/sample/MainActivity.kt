@@ -8,6 +8,7 @@ import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.setPadding
 import ua.naiksoftware.tooltips.TooltipOverlayPopup
 import ua.naiksoftware.tooltips.TooltipOverlayParams
 import ua.naiksoftware.tooltips.TooltipView
@@ -32,12 +33,16 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
+        val tooltipView = TooltipView(this, "Test tooltip")
+        val density = resources.displayMetrics.density
+        tooltipView.setPadding((density * 16).toInt(), (density * 4).toInt(), (density * 16).toInt(), (density * 4).toInt())
+
         fab.doOnPreDraw {
-            TooltipOverlayPopup(this).show(
-                TooltipOverlayParams()
+            TooltipOverlayPopup().show(
+                TooltipOverlayParams(tooltipView, fab)
                     .withBottomBarrier(findViewById(R.id.bottom_nav))
                     .withTopBarrier(tabs),
-                TooltipView(this), fab, this
+                this
             )
         }
     }
