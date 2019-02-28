@@ -3,6 +3,7 @@ package ua.naiksoftware.tooltips
 import android.content.Context
 import android.graphics.*
 import android.os.Build
+import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,11 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         init(context, null, 0, 0, text)
     }
 
-    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, text: String?) {
+    constructor(context: Context, spannedString: SpannedString) : super(context) {
+        init(context, null, 0, 0, null, spannedString)
+    }
+
+    private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int, text: String?, spannedString: SpannedString? = null) {
         setWillNotDraw(false)
         val density = context.resources.displayMetrics.density
         arrowWidth = (density * 32).toInt()
@@ -65,7 +70,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         bubblePaint.color = Color.WHITE
         bubblePaint.style = Paint.Style.FILL
         val textView = TextView(context)
-        textView.text = text
+        textView.text = text ?: spannedString
         textView.textSize = 18f
         textView.setTextColor(0xde000000.toInt())
         textView.setPadding((density * 16).toInt())
