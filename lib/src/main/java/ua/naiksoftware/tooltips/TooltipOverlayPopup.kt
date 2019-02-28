@@ -1,6 +1,7 @@
 package ua.naiksoftware.tooltips
 
 import android.app.Activity
+import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
 import android.view.*
@@ -27,7 +28,8 @@ class TooltipOverlayPopup() {
         val window = activity.window.decorView.getWindowVisibleDisplayFrame(screenRect)
         val overlayRect = getOverlayRect(params, screenRect)
 
-        val overlayLayoutParams = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val overlayLayoutParams =
+            ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         overlayLayoutParams.leftMargin = overlayRect.left
         overlayLayoutParams.topMargin = overlayRect.top
         overlayLayoutParams.rightMargin = screenRect.width() - overlayRect.right
@@ -35,17 +37,19 @@ class TooltipOverlayPopup() {
 
         popupRootView.addView(overlayView, overlayLayoutParams)
 
-        popupWindow = PopupWindow(popupRootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        popupWindow =
+            PopupWindow(popupRootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         popupWindow.showAtLocation(activity.window.decorView.rootView, Gravity.NO_GRAVITY, 0, 0)
 
         popupWindow.isFocusable = true
         popupWindow.contentView.isFocusableInTouchMode = true;
 
-        // TODO: Ignore swipes (check coordinates diff)
+        var startClickPosX = 0F
+        var startClickPosY = 0F
         popupWindow.setTouchInterceptor { _, event ->
             val clickedOnOverlay = clickedOnOverlay(screenRect, overlayRect, event.x, event.y)
             val clickedOnAnchor = clickedOnAnchor(screenRect, event.x, event.y)
-            if (event.action == MotionEvent.ACTION_UP) {
+            if (event.action == MotionEvent.ACTION_UP && Math.abs(event.x - startClickPosX) < 30 && Math.abs(event.y - startClickPosY) < 30) {
                 Log.d(TAG, "clickedOnOverlay = $clickedOnOverlay clickedOnAnchor = $clickedOnAnchor")
 
                 return@setTouchInterceptor when {
@@ -65,6 +69,10 @@ class TooltipOverlayPopup() {
                     }
                 }
             } else {
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    startClickPosX = event.x
+                    startClickPosY = event.y
+                }
                 if (!clickedOnOverlay || clickedOnAnchor && params.anchorClickable) {
                     activity.dispatchTouchEvent(event)
                 }
@@ -76,16 +84,18 @@ class TooltipOverlayPopup() {
 
         val anchorLocation = IntArray(2)
         params.anchorView.getLocationOnScreen(anchorLocation)
-        overlayView.setAnchorView(params.anchorView,
+        overlayView.setAnchorView(
+            params.anchorView,
             (anchorLocation[0] - overlayLayoutParams.leftMargin).toFloat(),
-            (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat())
+            (anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top).toFloat()
+        )
 
         val tooltipView = params.tooltipView
 
         if (tooltipView is AnchoredTooltip && params.tooltipPosition != TooltipPosition.CENTER) {
             var anchorX: Float
             var anchorY: Float
-            when(params.tooltipPosition) {
+            when (params.tooltipPosition) {
                 else -> {
                     anchorX = 0f
                     anchorY = 0f
