@@ -23,4 +23,4 @@ fab.doOnPreDraw {
 ![Screenshot](resources/screenshot_1.png)
 
 You also can show your own widgets as tooltips or implement `AnchoredTooltip`.
-By default, you can use `TooltipView` which shows simple text or any TextView passed through constructor.
+By default, you can use `TooltipView` which shows simple text or any TextView passed through constructor. Changing arrow size also possible.
