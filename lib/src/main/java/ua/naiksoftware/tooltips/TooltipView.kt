@@ -1,5 +1,6 @@
 package ua.naiksoftware.tooltips
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.*
 import android.os.Build
@@ -7,8 +8,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.view.setPadding
 
 
 class TooltipView : ViewGroup, AnchoredTooltip {
@@ -38,7 +37,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         init(context, attrs, defStyleAttr, 0, null)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -78,7 +77,8 @@ class TooltipView : ViewGroup, AnchoredTooltip {
             textView.text = text
             textView.textSize = 18f
             textView.setTextColor(0xde000000.toInt())
-            textView.setPadding((density * 16).toInt())
+            val spacing = (density * 16).toInt()
+            textView.setPadding(spacing, spacing, spacing, spacing)
             this.contentView = textView
         } else {
             this.contentView = contentView

@@ -1,11 +1,11 @@
 package ua.naiksoftware.tooltips
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import androidx.annotation.RequiresApi
 
 class TooltipOverlayView : View {
 
@@ -31,7 +31,7 @@ class TooltipOverlayView : View {
         init(context, attrs, defStyleAttr, 0)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,

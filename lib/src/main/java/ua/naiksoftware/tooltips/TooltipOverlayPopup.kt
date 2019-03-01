@@ -22,7 +22,7 @@ class TooltipOverlayPopup() {
         overlayView.setBackgroundColor(params.overlayColor)
 
         val screenRect = Rect()
-        val window = activity.window.decorView.getWindowVisibleDisplayFrame(screenRect)
+        activity.window.decorView.getWindowVisibleDisplayFrame(screenRect)
         val overlayRect = getOverlayRect(params, screenRect)
 
         val overlayLayoutParams =
