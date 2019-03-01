@@ -15,7 +15,7 @@ class TooltipOverlayPopup() {
 
     private lateinit var popupWindow: PopupWindow
 
-    fun show(params: TooltipOverlayParams, activity: Activity, onDismissListener: (() -> Unit)? = null) {
+    fun show(params: TooltipOverlayParams, activity: Activity, onDismissListener: TooltipDismissListener? = null) {
 
         val popupRootView = FrameLayout(activity)
         val overlayView = TooltipOverlayView(activity)
@@ -93,7 +93,9 @@ class TooltipOverlayPopup() {
             }
         }
 
-        popupWindow.setOnDismissListener(onDismissListener)
+        popupWindow.setOnDismissListener(PopupWindow.OnDismissListener {
+            onDismissListener?.onTooltipDismissed()
+        })
 
         overlayView.setAnchorView(params.anchorView, anchorViewX.toFloat(), anchorViewY.toFloat())
 
