@@ -40,7 +40,8 @@ class TooltipOverlayPopup() {
             anchorLocation[0],
             anchorLocation[1] - screenRect.top,
             anchorLocation[0] + params.anchorView.width,
-            anchorLocation[1] + params.anchorView.height - screenRect.top)
+            anchorLocation[1] + params.anchorView.height - screenRect.top
+        )
 
         popupRootView.addView(overlayView, overlayLayoutParams)
 
@@ -86,10 +87,10 @@ class TooltipOverlayPopup() {
                     startClickPosX = event.x
                     startClickPosY = event.y
                 }
-                if (event.action != MotionEvent.ACTION_MOVE) {
-                    if (!clickedOnOverlay || clickedOnAnchor && params.anchorClickable) {
-                        activity.dispatchTouchEvent(event)
-                    }
+                if (!clickedOnOverlay
+                    || clickedOnAnchor && params.anchorClickable && event.action != MotionEvent.ACTION_MOVE
+                ) {
+                    activity.dispatchTouchEvent(event)
                 }
                 return@setTouchInterceptor false
             }
