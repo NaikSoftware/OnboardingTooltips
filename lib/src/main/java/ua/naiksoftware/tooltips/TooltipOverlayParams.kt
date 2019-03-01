@@ -16,6 +16,8 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
     var dismissOnTouchAnchor = true
     var anchorClickable = true
 
+    var overlayFadeDuration = 500L // ms
+
     var tooltipPosition: TooltipPosition? = TooltipPosition.CENTER
 
     fun withLeftBarrier(leftBarrier: View): TooltipOverlayParams {
@@ -65,6 +67,11 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
 
     fun setAnchorClickable(value: Boolean) : TooltipOverlayParams {
         this.anchorClickable = value
+        return this
+    }
+
+    fun setOverlayFadeDuration(value: Long) : TooltipOverlayParams {
+        this.overlayFadeDuration = value
         return this
     }
 }

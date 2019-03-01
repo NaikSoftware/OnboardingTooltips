@@ -48,6 +48,11 @@ class TooltipOverlayPopup() {
             PopupWindow(popupRootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         popupWindow.showAtLocation(activity.window.decorView.rootView, Gravity.NO_GRAVITY, 0, 0)
 
+        if (params.overlayFadeDuration > 0) {
+            popupRootView.alpha = 0f
+            popupRootView.animate().alpha(1f).setDuration(params.overlayFadeDuration).start()
+        }
+
         popupWindow.isFocusable = true
         popupWindow.contentView.isFocusableInTouchMode = true;
 
