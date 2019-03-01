@@ -44,10 +44,8 @@ class MainActivity : AppCompatActivity() {
                     .setDismissOnTouchAnchor(false)
                     .setAnchorClickable(false)
                     .setDismissOnTouchOutside(false)
-                    .withOverlayColor(Color.BLUE)
                     .withTooltipPosition(TooltipPosition.TOP)
-                    .withBottomBarrier(findViewById(R.id.bottom_nav))
-                    .withTopBarrier(tabs),
+                    .withBottomBarrier(findViewById(R.id.bottom_nav)),
                 this
             )
         }
