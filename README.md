@@ -1,6 +1,18 @@
 # OnboardingTooltips
 
+[![Release](https://jitpack.io/v/NaikSoftware/OnboardingTooltips.svg)](https://jitpack.io/#NaikSoftware/OnboardingTooltips)
+
 Example usage (see module `sample`)
+
+```gradle
+repositories { 
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    implementation 'com.github.NaikSoftware:OnboardingTooltips:{latest version}'
+}
+```
 
 ```java
 val tooltipView = TooltipView(this, "Test tooltip")
