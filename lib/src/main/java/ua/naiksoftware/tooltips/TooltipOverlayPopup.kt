@@ -86,8 +86,10 @@ class TooltipOverlayPopup() {
                     startClickPosX = event.x
                     startClickPosY = event.y
                 }
-                if (!clickedOnOverlay || clickedOnAnchor && params.anchorClickable) {
-                    activity.dispatchTouchEvent(event)
+                if (event.action != MotionEvent.ACTION_MOVE) {
+                    if (!clickedOnOverlay || clickedOnAnchor && params.anchorClickable) {
+                        activity.dispatchTouchEvent(event)
+                    }
                 }
                 return@setTouchInterceptor false
             }
