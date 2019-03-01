@@ -69,8 +69,10 @@ class TooltipOverlayPopup() {
                         true
                     }
                     else -> {
-                        if (params.dismissOnTouchOutside) dismiss()
-                        activity.dispatchTouchEvent(event)
+                        if (params.dismissOnTouchOutside) {
+                            dismiss()
+                            activity.dispatchTouchEvent(event)
+                        }
                         false
                     }
                 }

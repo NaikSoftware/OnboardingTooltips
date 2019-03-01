@@ -11,7 +11,6 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
 
     var overlayColor = 0x7F000000
 
-    var dismissOnTouchTooltip = true
     var dismissOnTouchOutside = true
     var dismissOnTouchOverlay = true
     var dismissOnTouchAnchor = true
@@ -46,11 +45,6 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
 
     fun withOverlayColor(color: Int): TooltipOverlayParams {
         this.overlayColor = color
-        return this
-    }
-
-    fun setDismissOnTouchTooltip(value: Boolean) : TooltipOverlayParams {
-        this.dismissOnTouchTooltip = value
         return this
     }
 

@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 TooltipOverlayParams(tooltipView, fab)
                     .setDismissOnTouchAnchor(false)
                     .setAnchorClickable(false)
-                    .setDismissOnTouchTooltip(false)
+                    .setDismissOnTouchOutside(false)
                     .withOverlayColor(Color.BLUE)
                     .withTooltipPosition(TooltipPosition.TOP)
                     .withBottomBarrier(findViewById(R.id.bottom_nav))
