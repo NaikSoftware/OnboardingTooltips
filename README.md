@@ -1,5 +1,7 @@
 # OnboardingTooltips
 
+[![Release](https://jitpack.io/v/NaikSoftware/OnboardingTooltips.svg)](https://jitpack.io/#NaikSoftware/OnboardingTooltips)
+
 Example usage (see module `sample`)
 
 ```java
