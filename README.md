@@ -4,6 +4,16 @@
 
 Example usage (see module `sample`)
 
+```gradle
+repositories { 
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    implementation 'com.github.NaikSoftware:OnboardingTooltips:{latest version}'
+}
+```
+
 ```java
 val tooltipView = TooltipView(this, "Test tooltip")
 val density = resources.displayMetrics.density
