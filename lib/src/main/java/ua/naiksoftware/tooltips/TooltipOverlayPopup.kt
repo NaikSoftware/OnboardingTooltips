@@ -33,14 +33,14 @@ class TooltipOverlayPopup() {
         overlayLayoutParams.bottomMargin = screenRect.height() - overlayRect.bottom
 
         val anchorLocation = IntArray(2)
-        params.anchorView.getLocationOnScreen(anchorLocation)
+        params.anchorView?.getLocationOnScreen(anchorLocation)
         val anchorViewX = anchorLocation[0] - overlayLayoutParams.leftMargin
         val anchorViewY = anchorLocation[1] - overlayLayoutParams.topMargin - screenRect.top
         val anchorRect = Rect(
             anchorLocation[0],
             anchorLocation[1] - screenRect.top,
-            anchorLocation[0] + params.anchorView.width,
-            anchorLocation[1] + params.anchorView.height - screenRect.top
+            anchorLocation[0] + (params.anchorView?.width ?: 0),
+            anchorLocation[1] + (params.anchorView?.width ?: 0) - screenRect.top
         )
 
         popupRootView.addView(overlayView, overlayLayoutParams)
@@ -100,7 +100,9 @@ class TooltipOverlayPopup() {
             onDismissListener?.onTooltipDismissed()
         })
 
-        overlayView.setAnchorView(params.anchorView, anchorViewX.toFloat(), anchorViewY.toFloat())
+        params.anchorView?.let {
+            overlayView.setAnchorView(it, anchorViewX.toFloat(), anchorViewY.toFloat())
+        }
 
         val tooltipView = params.tooltipView
 
@@ -111,13 +113,13 @@ class TooltipOverlayPopup() {
             val anchorX: Float
             when (params.tooltipPosition) {
                 TooltipPosition.TOP -> {
-                    anchorX = anchorViewX + params.anchorView.width / 2f
+                    anchorX = anchorViewX + (params.anchorView?.width ?: 0) / 2f
                     lp.bottomMargin = screenRect.height() - anchorLocation[1] + screenRect.top
                     lp.gravity = Gravity.BOTTOM
                 }
                 TooltipPosition.BOTTOM -> {
-                    anchorX = anchorViewX + params.anchorView.width / 2f
-                    lp.topMargin = anchorLocation[1] - screenRect.top + params.anchorView.height
+                    anchorX = anchorViewX + (params.anchorView?.width ?: 0) / 2f
+                    lp.topMargin = anchorLocation[1] - screenRect.top + (params.anchorView?.width ?: 0)
                     lp.gravity = Gravity.TOP
                 }
                 else -> {

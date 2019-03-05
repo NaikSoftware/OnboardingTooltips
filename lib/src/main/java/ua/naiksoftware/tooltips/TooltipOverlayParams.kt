@@ -2,7 +2,7 @@ package ua.naiksoftware.tooltips
 
 import android.view.View
 
-class TooltipOverlayParams(val tooltipView: View, val anchorView: View) {
+class TooltipOverlayParams(val tooltipView: View, val anchorView: View?) {
 
     var leftBarrier: View? = null
     var rightBarrier: View? = null
