@@ -40,7 +40,7 @@ class TooltipOverlayPopup() {
             anchorLocation[0],
             anchorLocation[1] - screenRect.top,
             anchorLocation[0] + (params.anchorView?.width ?: 0),
-            anchorLocation[1] + (params.anchorView?.width ?: 0) - screenRect.top
+            anchorLocation[1] + (params.anchorView?.height ?: 0) - screenRect.top
         )
 
         popupRootView.addView(overlayView, overlayLayoutParams)
@@ -119,7 +119,7 @@ class TooltipOverlayPopup() {
                 }
                 TooltipPosition.BOTTOM -> {
                     anchorX = anchorViewX + (params.anchorView?.width ?: 0) / 2f
-                    lp.topMargin = anchorLocation[1] - screenRect.top + (params.anchorView?.width ?: 0)
+                    lp.topMargin = anchorLocation[1] - screenRect.top + (params.anchorView?.height ?: 0)
                     lp.gravity = Gravity.TOP
                 }
                 else -> {

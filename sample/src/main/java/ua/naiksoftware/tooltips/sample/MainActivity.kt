@@ -40,11 +40,11 @@ class MainActivity : AppCompatActivity() {
 
         fab.doOnPreDraw {
             TooltipOverlayPopup().show(
-                TooltipOverlayParams(tooltipView, fab)
+                TooltipOverlayParams(tooltipView, tabs)
                     .setDismissOnTouchAnchor(false)
                     .setAnchorClickable(false)
                     .setDismissOnTouchOutside(false)
-                    .withTooltipPosition(TooltipPosition.TOP)
+                    .withTooltipPosition(TooltipPosition.BOTTOM)
                     .withBottomBarrier(findViewById(R.id.bottom_nav)),
                 this
             )
