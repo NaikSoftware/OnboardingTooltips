@@ -3,7 +3,6 @@ package ua.naiksoftware.tooltips
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.Rect
-import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.PopupWindow
@@ -124,14 +123,7 @@ class TooltipOverlayPopup() {
             val clickedOnAnchor = clickedOnRect(anchorRect, event.x, event.y)
 
             if (tooltipRect == null) {
-                val tooltipLocation = IntArray(2)
-                tooltipView.getLocationOnScreen(tooltipLocation)
-                tooltipRect = Rect(
-                    tooltipLocation[0],
-                    tooltipLocation[1] - screenRect.top,
-                    tooltipLocation[0] + tooltipView.width,
-                    anchorLocation[1] + tooltipView.height - screenRect.top
-                )
+                tooltipRect = getTooltipRect(tooltipView, screenRect)
             }
 
             val clickedOnTooltip = clickedOnRect(tooltipRect!!, event.x, event.y)
@@ -237,6 +229,20 @@ class TooltipOverlayPopup() {
             }
         }
         return rect
+    }
+
+    private fun getTooltipRect(
+        tooltipView: View,
+        screenRect: Rect
+    ): Rect? {
+        val tooltipLocation = IntArray(2)
+        tooltipView.getLocationOnScreen(tooltipLocation)
+        return Rect(
+            tooltipLocation[0] + tooltipView.paddingLeft,
+            tooltipLocation[1] - screenRect.top + tooltipView.paddingTop,
+            tooltipLocation[0] + tooltipView.width - tooltipView.paddingRight,
+            tooltipLocation[1] + tooltipView.height - screenRect.top - tooltipView.paddingBottom
+        )
     }
 
     fun dismiss() {

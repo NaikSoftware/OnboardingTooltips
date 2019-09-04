@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val tooltipView = TooltipView(this, "Test tooltip")
         val density = resources.displayMetrics.density
         tooltipView.setPadding(
-            (density * 16).toInt(),
+            (density * 160).toInt(),
             (density * 4).toInt(),
             (density * 16).toInt(),
             (density * 4).toInt()
@@ -51,13 +51,14 @@ class MainActivity : AppCompatActivity() {
                 TooltipOverlayParams(tooltipView, fab)
                     .setDismissOnTouchAnchor(true)
                     .setAnchorClickable(true)
-                    .setDismissOnTouchOutside(true)
+                    .setDismissOnTouchOverlay(false)
+//                    .setDismissOnTouchOutside(true)
                     .withTransparentOverlay(true)
                     .withTooltipPosition(TooltipPosition.TOP),
                 this
             )
 
-            popup?.dismissAsync(5000)
+//            popup?.dismissAsync(5000)
         }
     }
 
