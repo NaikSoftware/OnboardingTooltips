@@ -92,6 +92,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         addView(contentView)
     }
 
+    fun setTextColor(color: Int) {
+        if (contentView is TextView) {
+            (contentView as? TextView)?.setTextColor(color)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         canvas.drawPath(getBubblePath(), bubblePaint)
     }

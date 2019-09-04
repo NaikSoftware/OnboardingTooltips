@@ -44,8 +44,8 @@ class TooltipOverlayView : View {
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         maskPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.XOR)
-        setWillNotDraw(false);
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        setWillNotDraw(false)
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
     fun setAnchorView(anchorView: View, anchorX: Float, anchorY: Float) {

@@ -36,16 +36,23 @@ class MainActivity : AppCompatActivity() {
 
         val tooltipView = TooltipView(this, "Test tooltip")
         val density = resources.displayMetrics.density
-        tooltipView.setPadding((density * 16).toInt(), (density * 4).toInt(), (density * 16).toInt(), (density * 4).toInt())
+        tooltipView.setPadding(
+            (density * 16).toInt(),
+            (density * 4).toInt(),
+            (density * 16).toInt(),
+            (density * 4).toInt()
+        )
+        tooltipView.setBubbleColor(Color.BLUE)
+        tooltipView.setTextColor(Color.WHITE)
 
         fab.doOnPreDraw {
             TooltipOverlayPopup().show(
-                TooltipOverlayParams(tooltipView, tabs)
-                    .setDismissOnTouchAnchor(false)
-                    .setAnchorClickable(false)
-                    .setDismissOnTouchOutside(false)
-                    .withTooltipPosition(TooltipPosition.BOTTOM)
-                    .withBottomBarrier(findViewById(R.id.bottom_nav)),
+                TooltipOverlayParams(tooltipView, fab)
+                    .setDismissOnTouchAnchor(true)
+                    .setAnchorClickable(true)
+                    .setDismissOnTouchOutside(true)
+                    .withTransparentOverlay(true)
+                    .withTooltipPosition(TooltipPosition.TOP),
                 this
             )
         }

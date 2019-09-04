@@ -15,6 +15,7 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View?) {
     var dismissOnTouchOverlay = true
     var dismissOnTouchAnchor = true
     var anchorClickable = true
+    var overlayTransparent = false
 
     var overlayFadeDuration = 500L // ms
 
@@ -72,6 +73,11 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View?) {
 
     fun setOverlayFadeDuration(value: Long) : TooltipOverlayParams {
         this.overlayFadeDuration = value
+        return this
+    }
+
+    fun withTransparentOverlay(value: Boolean) : TooltipOverlayParams {
+        this.overlayTransparent = value
         return this
     }
 }
