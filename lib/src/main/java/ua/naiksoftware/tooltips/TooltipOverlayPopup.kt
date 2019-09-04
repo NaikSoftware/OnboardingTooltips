@@ -115,7 +115,7 @@ class TooltipOverlayPopup() {
         }
 
         var tooltipRect : Rect? = null
-        var dismissDelayed : Boolean = false
+        var dismissDelayed = false
 
         var startClickPosX = 0F
         var startClickPosY = 0F

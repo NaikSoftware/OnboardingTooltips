@@ -8,7 +8,6 @@ import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.setPadding
 import ua.naiksoftware.tooltips.TooltipOverlayPopup
 import ua.naiksoftware.tooltips.TooltipOverlayParams
 import ua.naiksoftware.tooltips.TooltipPosition
@@ -18,6 +17,7 @@ import ua.naiksoftware.tooltips.sample.ui.main.SectionsPagerAdapter
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fab: FloatingActionButton
+    private var popup : TooltipOverlayPopup? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
         tooltipView.setTextColor(Color.WHITE)
 
         fab.doOnPreDraw {
-            TooltipOverlayPopup().show(
+            popup = TooltipOverlayPopup()
+            popup?.show(
                 TooltipOverlayParams(tooltipView, fab)
                     .setDismissOnTouchAnchor(true)
                     .setAnchorClickable(true)
@@ -55,6 +56,13 @@ class MainActivity : AppCompatActivity() {
                     .withTooltipPosition(TooltipPosition.TOP),
                 this
             )
+
+            popup?.dismissAsync(5000)
         }
+    }
+
+    override fun onDestroy() {
+        popup?.dismiss()
+        super.onDestroy()
     }
 }
