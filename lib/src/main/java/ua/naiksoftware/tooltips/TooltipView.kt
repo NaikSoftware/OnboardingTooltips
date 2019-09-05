@@ -98,6 +98,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         }
     }
 
+    fun setTextSize(textSize: Float) {
+        if (contentView is TextView) {
+            (contentView as? TextView)?.textSize = textSize
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         canvas.drawPath(getBubblePath(), bubblePaint)
     }

@@ -51,27 +51,27 @@ class TooltipOverlayParams(val tooltipView: View, val anchorView: View?) {
         return this
     }
 
-    fun setDismissOnTouchOutside(value: Boolean) : TooltipOverlayParams {
+    fun dismissOnTouchOutside(value: Boolean) : TooltipOverlayParams {
         this.dismissOnTouchOutside = value
         return this
     }
 
-    fun setDismissOnTouchOverlay(value: Boolean) : TooltipOverlayParams {
+    fun dismissOnTouchOverlay(value: Boolean) : TooltipOverlayParams {
         this.dismissOnTouchOverlay = value
         return this
     }
 
-    fun setDismissOnTouchAnchor(value: Boolean) : TooltipOverlayParams {
+    fun dismissOnTouchAnchor(value: Boolean) : TooltipOverlayParams {
         this.dismissOnTouchAnchor = value
         return this
     }
 
-    fun setAnchorClickable(value: Boolean) : TooltipOverlayParams {
+    fun anchorClickable(value: Boolean) : TooltipOverlayParams {
         this.anchorClickable = value
         return this
     }
 
-    fun setOverlayFadeDuration(value: Long) : TooltipOverlayParams {
+    fun overlayFadeDuration(value: Long) : TooltipOverlayParams {
         this.overlayFadeDuration = value
         return this
     }

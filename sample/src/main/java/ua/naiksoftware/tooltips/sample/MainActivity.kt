@@ -49,10 +49,10 @@ class MainActivity : AppCompatActivity() {
             popup = TooltipOverlayPopup()
             popup?.show(
                 TooltipOverlayParams(tooltipView, fab)
-                    .setDismissOnTouchAnchor(true)
-                    .setAnchorClickable(true)
-                    .setDismissOnTouchOverlay(false)
-//                    .setDismissOnTouchOutside(true)
+                    .dismissOnTouchAnchor(true)
+                    .anchorClickable(true)
+                    .dismissOnTouchOverlay(false)
+//                    .dismissOnTouchOutside(true)
                     .withTransparentOverlay(true)
                     .withTooltipPosition(TooltipPosition.TOP),
                 this
