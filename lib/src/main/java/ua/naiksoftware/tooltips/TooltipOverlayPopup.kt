@@ -64,7 +64,7 @@ class TooltipOverlayPopup() {
             )
         popupWindow.showAtLocation(activity.window.decorView.rootView, Gravity.NO_GRAVITY, 0, 0)
 
-        if (params.overlayFadeDuration > 0 && !params.overlayTransparent) {
+        if (params.overlayFadeDuration > 0) {
             popupRootView.alpha = 0f
             popupRootView.animate().alpha(1f).setDuration(params.overlayFadeDuration).start()
         }
