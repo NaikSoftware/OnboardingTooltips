@@ -113,7 +113,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         val minArrowSpacing = arrowWidth / 4f
 
         if (arrowTargetX < paddingLeft + minArrowSpacing + arrowWidth / 2) {
-            arrowTargetX = paddingLeft + minArrowSpacing
+            arrowTargetX = paddingLeft + minArrowSpacing + arrowWidth / 2
         } else if (arrowTargetX > width - paddingRight - minArrowSpacing - arrowWidth / 2) {
             arrowTargetX = width - paddingRight - minArrowSpacing - arrowWidth / 2
         }
