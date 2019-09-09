@@ -50,6 +50,7 @@
             android:layout_marginEnd="16dp"
             app:layout_anchor="@id/bottom_nav"
             app:layout_anchorGravity="right|top"
+            app:fabSize="mini"
             app:srcCompat="@android:drawable/ic_dialog_email"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

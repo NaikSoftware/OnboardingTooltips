@@ -109,9 +109,17 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     }
 
     private fun getBubblePath(): Path {
+
+        val minArrowSpacing = arrowWidth / 4f
+
+        if (arrowTargetX < paddingLeft + minArrowSpacing + arrowWidth / 2) {
+            arrowTargetX = paddingLeft + minArrowSpacing
+        } else if (arrowTargetX > width - paddingRight - minArrowSpacing - arrowWidth / 2) {
+            arrowTargetX = width - paddingRight - minArrowSpacing - arrowWidth / 2
+        }
+
         val path = Path()
         when (position) {
-
 
             TooltipPosition.CENTER -> {
                 path.addRoundRect(
