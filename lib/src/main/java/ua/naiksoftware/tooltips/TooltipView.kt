@@ -20,6 +20,8 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     private var arrowTargetX = -1f
     private lateinit var contentView: View
     private lateinit var bubblePaint: Paint
+    private var sideLeft = 0f
+    private var sideRight = 0f
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0, null)
@@ -124,9 +126,9 @@ class TooltipView : ViewGroup, AnchoredTooltip {
             TooltipPosition.CENTER -> {
                 path.addRoundRect(
                     RectF(
-                        paddingLeft.toFloat(),
+                        sideLeft,
                         paddingTop.toFloat(),
-                        width - paddingRight.toFloat(),
+                        sideRight,
                         height - paddingBottom.toFloat()
                     ),
                     bubbleRadius, bubbleRadius, Path.Direction.CW
@@ -138,9 +140,9 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                 val bubbleBottom = height - paddingBottom.toFloat() - arrowHeight
                 path.addRoundRect(
                     RectF(
-                        paddingLeft.toFloat(),
+                        sideLeft,
                         paddingTop.toFloat(),
-                        width - paddingRight.toFloat(),
+                        sideRight,
                         bubbleBottom
                     ),
                     bubbleRadius, bubbleRadius, Path.Direction.CW
@@ -166,9 +168,9 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                 val bubbleTop = paddingTop.toFloat() + arrowHeight
                 path.addRoundRect(
                     RectF(
-                        paddingLeft.toFloat(),
+                        sideLeft,
                         bubbleTop,
-                        width - paddingRight.toFloat(),
+                        sideRight,
                         height - paddingBottom.toFloat()
                     ),
                     bubbleRadius, bubbleRadius, Path.Direction.CW
@@ -221,6 +223,30 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         invalidate()
     }
 
+    private fun getSides() : Pair<Float, Float> {
+        val minArrowSpacing = arrowWidth / 4f
+        val width = measuredWidth
+        val bubbleWidth = contentView.measuredWidth.coerceAtLeast(minimumWidth)
+        val leftSide: Float
+        val rightSide: Float
+        if (arrowTargetX >= 0) {
+            if (arrowTargetX > width / 2f + bubbleWidth / 2f - (minArrowSpacing + arrowWidth / 2f)) {
+                rightSide = (arrowTargetX + (minArrowSpacing + arrowWidth / 2f)).coerceAtMost((width - paddingRight).toFloat())
+                leftSide = (rightSide - bubbleWidth).coerceAtLeast(paddingLeft.toFloat())
+            } else if (arrowTargetX < width / 2f - bubbleWidth / 2 + (minArrowSpacing + arrowWidth / 2f)) {
+                leftSide = (arrowTargetX - (minArrowSpacing + arrowWidth / 2f)).coerceAtMost(paddingLeft.toFloat())
+                rightSide = (leftSide + bubbleWidth).coerceAtMost((width - paddingRight).toFloat())
+            } else {
+                leftSide = (width / 2f - bubbleWidth / 2f).coerceAtMost(paddingLeft.toFloat())
+                rightSide = (width / 2f + bubbleWidth / 2f).coerceAtLeast((width - paddingRight).toFloat())
+            }
+        } else {
+            leftSide = paddingLeft.toFloat()
+            rightSide = (width - paddingRight).toFloat()
+        }
+        return leftSide to rightSide
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthUsed = paddingLeft + paddingRight
         var heightUsed = paddingTop + paddingBottom
@@ -229,7 +255,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         }
 
         contentView.measure(
-            getChildMeasureSpec(widthMeasureSpec, widthUsed, LayoutParams.MATCH_PARENT),
+            getChildMeasureSpec(widthMeasureSpec, widthUsed, LayoutParams.WRAP_CONTENT),
             getChildMeasureSpec(heightMeasureSpec, heightUsed, LayoutParams.WRAP_CONTENT)
         )
 
@@ -245,26 +271,38 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                 contentView.measuredState shl View.MEASURED_HEIGHT_STATE_SHIFT
             )
         )
+
+        val (sideLeft, sideRight) = getSides()
+        this.sideLeft = sideLeft
+        this.sideRight = sideRight
+
+        setPadding(
+            sideLeft.toInt(),
+            paddingTop,
+            measuredWidth - sideRight.toInt(),
+            paddingBottom
+        )
+
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         when (position) {
             TooltipPosition.TOP -> contentView.layout(
-                paddingLeft,
+                sideLeft.toInt(),
                 paddingTop,
-                contentView.measuredWidth + paddingLeft,
+                sideRight.toInt(),
                 contentView.measuredHeight + paddingTop
             )
             TooltipPosition.BOTTOM -> contentView.layout(
-                paddingLeft,
+                sideLeft.toInt(),
                 paddingTop + arrowHeight,
-                contentView.measuredWidth + paddingLeft,
+                sideRight.toInt(),
                 paddingTop + contentView.measuredHeight + arrowHeight
             )
             else -> contentView.layout(
-                paddingLeft,
+                sideLeft.toInt(),
                 paddingTop,
-                contentView.measuredWidth + paddingLeft,
+                sideRight.toInt(),
                 contentView.measuredHeight + paddingTop
             )
         }

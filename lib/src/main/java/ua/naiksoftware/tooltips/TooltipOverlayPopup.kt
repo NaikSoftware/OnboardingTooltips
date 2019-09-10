@@ -95,7 +95,7 @@ class TooltipOverlayPopup() {
                     lp.gravity = Gravity.TOP
                 }
                 else -> {
-                    anchorX = 0f
+                    anchorX = -1f
                 }
             }
             tooltipView.setTooltipAnchor(anchorX, params.tooltipPosition!!)
@@ -237,6 +237,7 @@ class TooltipOverlayPopup() {
     ): Rect? {
         val tooltipLocation = IntArray(2)
         tooltipView.getLocationOnScreen(tooltipLocation)
+
         return Rect(
             tooltipLocation[0] + tooltipView.paddingLeft,
             tooltipLocation[1] - screenRect.top + tooltipView.paddingTop,
