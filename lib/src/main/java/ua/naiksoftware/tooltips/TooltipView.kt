@@ -22,6 +22,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     private lateinit var bubblePaint: Paint
     private var sideLeft = 0f
     private var sideRight = 0f
+    private var maximumWidth = 0
 
     constructor(context: Context) : super(context) {
         init(context, null, 0, 0, null)
@@ -233,7 +234,10 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     private fun getSides() : Pair<Float, Float> {
         val minArrowSpacing = arrowWidth / 4f
         val width = measuredWidth
-        val bubbleWidth = contentView.measuredWidth.coerceAtLeast(minimumWidth)
+        var bubbleWidth = contentView.measuredWidth.coerceAtLeast(minimumWidth)
+        if (maximumWidth > 0) {
+            bubbleWidth = bubbleWidth.coerceAtMost(maximumWidth)
+        }
         val leftSide: Float
         val rightSide: Float
         if (arrowTargetX >= 0) {
