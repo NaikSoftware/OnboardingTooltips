@@ -256,11 +256,11 @@ class TooltipView : ViewGroup, AnchoredTooltip {
                 rightSide = (arrowTargetX + (minArrowSpacing + arrowWidth / 2f)).coerceAtMost((width - paddingRight).toFloat())
                 leftSide = (rightSide - bubbleWidth).coerceAtLeast(paddingLeft.toFloat())
             } else if (arrowTargetX < width / 2f - bubbleWidth / 2 + (minArrowSpacing + arrowWidth / 2f)) {
-                leftSide = (arrowTargetX - (minArrowSpacing + arrowWidth / 2f)).coerceAtMost(paddingLeft.toFloat())
+                leftSide = (arrowTargetX - (minArrowSpacing + arrowWidth / 2f)).coerceAtLeast(paddingLeft.toFloat())
                 rightSide = (leftSide + bubbleWidth).coerceAtMost((width - paddingRight).toFloat())
             } else {
-                leftSide = (width / 2f - bubbleWidth / 2f).coerceAtMost(paddingLeft.toFloat())
-                rightSide = (width / 2f + bubbleWidth / 2f).coerceAtLeast((width - paddingRight).toFloat())
+                leftSide = (width / 2f - bubbleWidth / 2f).coerceAtLeast(paddingLeft.toFloat())
+                rightSide = (width / 2f + bubbleWidth / 2f).coerceAtMost((width - paddingRight).toFloat())
             }
         } else {
             leftSide = paddingLeft.toFloat()
