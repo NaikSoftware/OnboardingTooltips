@@ -78,6 +78,7 @@ class TooltipView : ViewGroup, AnchoredTooltip {
             val textView = TextView(context)
             textView.text = text
             textView.textSize = 18f
+            textView.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
             textView.setTextColor(0xde000000.toInt())
             val spacing = (density * 16).toInt()
             textView.setPadding(spacing, spacing, spacing, spacing)
@@ -103,6 +104,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     fun setTextSize(textSize: Float) {
         if (contentView is TextView) {
             (contentView as? TextView)?.textSize = textSize
+        }
+    }
+
+    fun setTypeface(typeface: Typeface) {
+        if (contentView is TextView) {
+            (contentView as? TextView)?.typeface = typeface
         }
     }
 
