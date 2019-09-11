@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -111,6 +112,12 @@ class TooltipView : ViewGroup, AnchoredTooltip {
     fun setTypeface(typeface: Typeface) {
         if (contentView is TextView) {
             (contentView as? TextView)?.typeface = typeface
+        }
+    }
+
+    fun setLineSpacing(extraSpacing: Float) {
+        if (contentView is TextView) {
+            (contentView as? TextView)?.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, extraSpacing,  getResources().getDisplayMetrics()), 1.0f)
         }
     }
 

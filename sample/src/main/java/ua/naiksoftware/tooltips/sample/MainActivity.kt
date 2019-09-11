@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        val tooltipView = TooltipView(this, "Test tooltip")
+        val tooltipView = TooltipView(this, "Test tooltip long long skjdcs sdc s c sdc s dcs" +
+                " dc s dc s c s cs dc s dcsdcscdsdc  sc sdcsdcsdc s dcs dc s dc sdc sd c sc")
         val density = resources.displayMetrics.density
         tooltipView.setPadding(
             (density * 16).toInt(),
@@ -44,7 +45,9 @@ class MainActivity : AppCompatActivity() {
         )
         tooltipView.setBubbleColor(Color.BLUE)
         tooltipView.setTextColor(Color.WHITE)
-        tooltipView.minimumWidth = (density * 200).toInt()
+        tooltipView.setMaxWidth((density * 200).toInt())
+        tooltipView.setLineSpacing(5f)
+
 
         fab.doOnPreDraw {
             popup = TooltipOverlayPopup()
