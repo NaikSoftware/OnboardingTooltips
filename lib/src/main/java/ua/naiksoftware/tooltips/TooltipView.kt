@@ -114,6 +114,10 @@ class TooltipView : ViewGroup, AnchoredTooltip {
         }
     }
 
+    fun setMaxWidth(maxWidth: Int) {
+        this.maximumWidth = maxWidth
+    }
+
     override fun onDraw(canvas: Canvas) {
         canvas.drawPath(getBubblePath(), bubblePaint)
     }
